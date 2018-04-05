@@ -1,5 +1,6 @@
 <?php
 
+$mysqlpass = "";
 $domain = "example.com";
 $host = "";
 $username = "";
