@@ -1,0 +1,8 @@
+<?php
+
+$domain = "example.com";
+$host = "";
+$username = "";
+$password = "";
+$port = "465";
+$secure = "ssl";
