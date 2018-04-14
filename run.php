@@ -21,7 +21,7 @@ while(true)
 		LIMIT 1");
 
 	// ensure there is a next email
-	if(empty($res))	break;
+	if(empty($res)) break;
 	$to = $res[0]->email;
 
 	// get the email content
@@ -31,15 +31,19 @@ while(true)
 	$body = $email->body;
 
 	// send the email
-	Mailer::send($to, $subject, $body);
+	try {
+		Mailer::send($to, $subject, $body);
+	} catch(Exception $e) {
+		error_log("[".date('Y-m-d')."] Error sending to $to. " . $e->getMessage() . "\n", 3, "logs/error.log");
+		break;
+	}
 
 	// save records
-	Connection::query("
-		UPDATE FROM content SET used=used+1 WHERE id=$id;
-		UPDATE emails SET status='sent', processed=CURRENT_TIMESTAMP, content='$id' WHERE email='$to';")
+	Connection::query("UPDATE content SET used=used+1 WHERE id=$id;");
+	Connection::query("UPDATE emails SET status='sent', processed=CURRENT_TIMESTAMP, content='$id' WHERE email='$to';");
 
 	// save the log
-	error_log("Email $id sent to $to at " . date("h:i:s"));
+	error_log("[".date('Y-m-d')."] Email $id sent to $to\n", 3, "logs/sent.log");
 
 	// wait a random delay
 	sleep(rand(2, 10));

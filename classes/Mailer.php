@@ -25,8 +25,6 @@ class Mailer
 
 		$mailer->send($mail, false);
 
-		error_log("sent");
-
 		return true;
 	}
 }

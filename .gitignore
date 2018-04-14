@@ -2,3 +2,4 @@ configs/configs.php
 composer.lock
 script.lock
 vendor
+logs
