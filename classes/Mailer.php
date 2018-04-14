@@ -5,7 +5,7 @@ class Mailer
 	static function send($to, $subject, $body)
 	{
 		// include the config params
-		require_once "configs/configs.php";
+		require "configs/configs.php";
 
 		// create message
 		$mail = new Nette\Mail\Message;
