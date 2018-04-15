@@ -1,17 +1,19 @@
+#!/usr/bin/php -q
 <?php
 
-include_once "vendor/autoload.php";
-include_once "classes/Mailer.php";
-include_once "classes/Connection.php";
+$path = dirname(__FILE__);
+include_once "$path/vendor/autoload.php";
+include_once "$path/classes/Mailer.php";
+include_once "$path/classes/Connection.php";
 
 // stop if lock is set
-if(file_exists("script.lock")) die("lock is up\n");
+if(file_exists("$path/script.lock")) die("lock is up\n");
 
 // log when the crontab runs
-error_log("[".date('Y-m-d H:i:s')."] TASK STARTED\n", 3, "logs/event.log");
+error_log("[".date('Y-m-d H:i:s')."] TASK STARTED\n", 3, "$path/logs/event.log");
 
 // create the lock file
-file_put_contents("script.lock", "");
+file_put_contents("$path/script.lock", "");
 
 while(true)
 {
@@ -37,7 +39,7 @@ while(true)
 	try {
 		Mailer::send($to, $subject, $body);
 	} catch(Exception $e) {
-		error_log("[".date('Y-m-d H:i:s')."] Error sending to $to. " . $e->getMessage() . "\n", 3, "logs/error.log");
+		error_log("[".date('Y-m-d H:i:s')."] Error sending to $to. " . $e->getMessage() . "\n", 3, "$path/logs/error.log");
 		break;
 	}
 
@@ -46,11 +48,11 @@ while(true)
 	Connection::query("UPDATE emails SET status='sent', processed=CURRENT_TIMESTAMP, content='$id' WHERE email='$to';");
 
 	// save the log
-	error_log("[".date('Y-m-d H:i:s')."] Email $id sent to $to\n", 3, "logs/event.log");
+	error_log("[".date('Y-m-d H:i:s')."] Email $id sent to $to\n", 3, "$path/logs/event.log");
 
 	// wait a random delay
 	sleep(rand(2, 10));
 }
 
 // unlock the script
-unlink("script.lock");
+unlink("$path/script.lock");
