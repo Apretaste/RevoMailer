@@ -1,14 +1,14 @@
 <?php
 
 $path = dirname(__FILE__);
-include_once "$path/classes/Connection.php";
+include_once "$path/../classes/Connection.php";
 
 class Mailer
 {
 	static function send($to, $subject, $body)
 	{
 		// include the config params
-		require "$path/configs/configs.php";
+		require "$path/../configs/configs.php";
 
 		// get the domain to use
 		$domain = Connection::query("SELECT domain FROM domains WHERE active=1 ORDER BY RAND() LIMIT 1")[0]->domain;
