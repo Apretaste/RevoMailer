@@ -1,13 +1,15 @@
 #!/usr/bin/php -q
 <?php
 
-$path = dirname(__FILE__);
-include_once "$path/vendor/autoload.php";
-include_once "$path/classes/Mailer.php";
-include_once "$path/classes/Connection.php";
+ini_set('display_errors', 1);
 
 // stop if lock is set
+$path = dirname(__FILE__);
 if(file_exists("$path/script.lock")) die("lock is up\n");
+
+include_once "vendor/autoload.php";
+include_once "classes/Mailer.php";
+include_once "classes/Connection.php";
 
 // log when the crontab runs
 error_log("[".date('Y-m-d H:i:s')."] TASK STARTED\n", 3, "$path/logs/event.log");
