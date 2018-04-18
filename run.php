@@ -31,6 +31,12 @@ while(true)
 	if(empty($res)) break;
 	$to = $res[0]->email;
 
+	// check the email is valid
+	if ( ! filter_var($to, FILTER_VALIDATE_EMAIL)) {
+	    Connection::query("UPDATE emails SET status='error', processed=CURRENT_TIMESTAMP WHERE email='$to'");
+		continue;
+	}
+
 	// get the email content
 	$email = Connection::query("SELECT * FROM content WHERE active=1 ORDER BY RAND() LIMIT 1")[0];
 	$id = $email->id;
